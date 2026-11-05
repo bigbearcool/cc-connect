@@ -1,0 +1,13 @@
+{
+  "sshHost": "devbox",
+  "tokenFile": "/home/me/.cc-connect/remote/devbox.token",
+  "remoteHome": "/home/me",
+  "remoteBase": "/home/me/projects",
+  "remoteDefaultCwd": "/home/me/projects/my-app",
+  "localRoot": "/home/me/.cc-connect/remote/devbox-workspaces",
+  "adapterCommand": "/usr/bin/node /home/me/.npm-global/lib/node_modules/@agentclientprotocol/claude-agent-acp/dist/index.js",
+  "proxy": "http://127.0.0.1:17897",
+  "ccProject": "devbox",
+  "ccConnectBinary": "cc-connect",
+  "autoCreateRemoteDirs": true
+}
