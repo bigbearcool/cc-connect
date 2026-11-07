@@ -26,6 +26,7 @@ runs on a **remote machine** over SSH — the same idea as Claude Desktop's SSH 
 | File | Runs on | Purpose |
 |---|---|---|
 | `remote-acp.js` | host | ACP launcher used as the project's `cmd`; all logic below |
+| `replay-filter.js` | host | drops history replayed during `session/load`, so long chats cannot deadlock cc-connect ([#1941](https://github.com/chenhg5/cc-connect/issues/1941)); keep it next to `remote-acp.js` |
 | `remote.example.json` | host | launcher config (copy and edit) |
 | `remote-shim-cc-connect.js` | remote | installed as `~/.cc-connect-remote/bin/cc-connect`; bridges `send` and `workspace-prepare` |
 | `tunnel-guard.sh` / `tunnel-guard.cmd` | host | optional auto-reconnecting reverse tunnel |

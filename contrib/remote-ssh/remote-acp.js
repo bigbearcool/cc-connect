@@ -25,6 +25,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { createReplayFilter } = require('./replay-filter');
 
 // ---------- config ----------
 const CONFIG_PATH = process.argv[2] || process.env.CC_REMOTE_CONFIG;
@@ -82,7 +83,10 @@ const remoteCmd = [
   `exec ${ADAPTER_CMD}`,
 ].join('; ');
 
-const agent = spawn(SSH, [...SSH_OPTS, HOST, remoteCmd], { stdio: ['pipe', 'inherit', 'inherit'], windowsHide: true });
+const agent = spawn(SSH, [...SSH_OPTS, HOST, remoteCmd], { stdio: ['pipe', 'pipe', 'inherit'], windowsHide: true });
+// History replayed during session/load is dropped before it reaches cc-connect (see replay-filter.js).
+const replay = createReplayFilter({ log });
+replay.pipe(agent.stdout, process.stdout);
 agent.stdin.write(token + '\n');
 token = null;
 log(`agent started (project=${PROJECT || '-'}, session_key=${process.env.CC_SESSION_KEY ? 'set' : 'unset'})`);
@@ -222,6 +226,7 @@ async function transform(line) {
   let msg;
   try { msg = JSON.parse(line); } catch { return line; }
   if (!msg || !msg.method) return line;
+  replay.noteRequest(msg);
 
   if (SESSION_METHODS.has(msg.method) && msg.params) {
     if (typeof msg.params.cwd === 'string') {
